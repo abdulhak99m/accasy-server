@@ -7,9 +7,9 @@ use App;
 
 class ReportApiController extends Controller
 {
-    function store(Request $request) { 
-     if($request->header('User-Agent') != "accasy") 
-            return response()->json(['error' => 'Unauthorized'],403);
+    function store(Request $request) {
+        if($request->header('User-Agent') != "accasy") 
+            return response()->json(['message' => 'Unauthorized']);
         try {
              $data = $request->json()->all();
             if(isset($data['category'])){
@@ -25,22 +25,17 @@ class ReportApiController extends Controller
                         $report->phone_number = isset($data['phone_number']) ? $data['phone_number'] : null;
                         $report->photo = isset($data['photo']) ? $data['photo'] : null;
                         $subcategory->reports()->save($report);
-                        return  response()->json(['message' => 'ok']); //$report->id;
-                    }else
-                            return response()->json(['message' => 'no subcategory']);
-                  }else
-                    return response()->json(['message' => 'subcategory missing in request']);
-                } else
-                    return response()->json(['message' => 'no category']);
-            
-            } else
-                return response()->json(['message' => 'category missing in request']);
+                        return response()->json(['message' => 'ok']); //$report->id;
+                    }  
+                  }      
+                }  
+            }               
             /*else
             return 'no id';
              \App\Report::create($data)->id;
             return 'ok';*/
-        }catch(\Exception $e) {
-            return response()->json($e);
+        }catch(Illuminate\Database\QueryException $e) {
+            return response()->json(['message' => 'error']);
         }
         
         return response()->json(['message' => 'error']);
@@ -67,7 +62,7 @@ class ReportApiController extends Controller
          $counter = 0;
         foreach($category->subcategories as $subcategory) {
              foreach($subcategory->reports as $report){
-                 $reportsArray[$counter++] = ["category" => $category->name, "sub_category" => $subcategory->name, "coordinates" => $report->coordinates, "comment" => $report->comment, "report_timestamp" => $report->report_timestamp,  "phone_number" => $report->phone_number, "image" => $report->photo];
+                 $reportsArray[$counter++] = ["category" => $category->name, "sub_category" => $subcategory->name, "coordinates" => $report->coordinates, "comment" => $report->comment, "report_timestamp" => $report->report_timestamp, "phone_number" => $report->phone_number, "image" => $report->photo];
                 }
         }
         return response()->json($reportsArray); 
@@ -77,10 +72,11 @@ class ReportApiController extends Controller
          $reportsArray = array(); 
          $counter = 0;
         foreach($subcategory->reports as $report){
-                 $reportsArray[$counter++] = ["category" => $subcategory->category->name, "sub_category" => $subcategory->name, "coordinates" => $report->coordinates, "comment" => $report->comment, "report_timestamp" => $report->report_timestamp, "phone_number" => $report->phone_number, "image" => $report->photo];
+                 $reportsArray[$counter++] = ["category" => $subcategory->category->name, "sub_category" => $subcategory->name, "coordinates" => $report->coordinates, "comment" => $report->comment, "report_timestamp" => $report->report_timestamp, "phone_number" => $report->phone_number,"image" => $report->photo];
                 }   
          return response()->json($reportsArray); 
     }
+    
     
     
     function getCategoryFromName($name) {

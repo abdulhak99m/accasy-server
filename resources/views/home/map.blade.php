@@ -51,14 +51,14 @@
                     map.addMarker({
                       lat: coordinates[0],
                       lng: coordinates[1],
-                      icon:"{{url('/')}}/img/marker.png",
+                      //icon:"{{url('/')}}/img/marker.png",
                       title: element.category,
                       infoWindow: {
-                          content: "<p> Category:"+element.category+"<br>"+
-                                        "Subcategory:"+element.sub_category+"<br>"+
-                                        "Coordinates:"+element.coordinates+"<br>"+
-                                        "Comment:"+element.comment+"<br>"+ 
-                                        "<img src=data:image/png;base64,"+element.image+" alt=photo />"+
+                          content: "<p> <strong>Category: </strong>"+element.category+"<br>"+
+                                        "<strong>Subcategory: </strong>"+element.sub_category+"<br>"+
+                                        "<strong>Coordinates: </strong>"+element.coordinates+"<br>"+
+                                        "<strong>Comment: </strong>"+element.comment+"<br>"+ 
+                                        "<img src='data:image/png;base64,"+element.image+"' alt=photo />"+
                                    "</p>"
                         }
                     });
